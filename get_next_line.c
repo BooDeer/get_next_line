@@ -13,35 +13,51 @@
 #include <stdio.h>
 #include "get_next_line.h"
 
+char *check_reminder(char *reminder, char **line)
+{
+    char *p_n;
+
+    if (reminder)
+        if ((p_n = ft_strchr(reminder, '\n')))
+        {
+            *p_n = '\n';
+            *line = ft_strdup(reminder);
+			ft_strcpy(reminder, ++p_n);
+        }
+		else
+		{
+			*line = ft_strdup(reminder);
+			ft_strclr(reminder); // check what function is this = to-check
+		}
+	else
+		*line = ft_strnew(); // to-check
+	return (p_n);
+}
+
 int		get_next_line(int fd, char **line)
 {
-	int				chr;
-	int				k;
-	char			*ptr;
-	char			*buffer;
-	static char		*extra;
-	
-	k = 1;
-	*line = ft_strdup("");
-	if (extra)
-		*line = ft_strjoin(*line, extra);
-	buffer = (char *)malloc(BUFFER_SIZE + 1);
-	free(extra);
-	while (k && (chr = read(fd, buffer, BUFFER_SIZE)))
+	static char		*reminder;
+	char			buffer;
+	int				br;
+	char			*p_n;
+	char			*tmp;
+
+	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	p_n = check_reminder(reminder, line);
+	while (!p_n && (br = read(fd, buffer, BUFFER_SIZE)))
 	{
-		// printf("*------------------------------------------*\n\t\t\t%d\n", chr);
-		buffer[chr] = '\0';
-        if ((ptr = ft_strchr(buffer, '\n')))
-        {
-            extra = ft_strdup(ptr + 1);
-			*ptr = '\0'; 
-            k = 0;
-        }
-        *line = ft_strjoin(*line ,buffer);
-		if (k == 0)
-			return (1);
+		buffer[br] = '\0';
+		if ((p_n = ft_strchr(buffer, '\n')))
+		{
+			*p_n = '\0';
+			p_n++;
+			reminder = ft_strdup(p_n);
+		}
+		tmp = *line;
+		*line = ft_strjoin(*line, buffer);
+		free(tmp);
 	}
-	return (0);
+	return (br || ft_strlen(reminder)) ? 1 : 0;
 }
 
 
