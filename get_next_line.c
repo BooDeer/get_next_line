@@ -6,37 +6,37 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 20:26:22 by hboudhir          #+#    #+#             */
-/*   Updated: 2019/11/06 17:15:54 by hboudhir         ###   ########.fr       */
+/*   Updated: 2019/11/06 21:22:50 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "get_next_line.h"
 
-size_t		ft_strlen(const char *s)
+size_t			ft_strlen(const char *s)
 {
-    size_t     i;
-	
-    i = 0;
+	size_t		i;
+
+	i = 0;
 	if (!s)
 		return (0);
-    while (s[i] != '\0')
-        i++;
-    return (i);
+	while (s[i] != '\0')
+		i++;
+	return (i);
 }
 
-char		*check_reminder(char *reminder, char **line)
+char			*check_reminder(char *reminder, char **line)
 {
-    char *p_n;
+	char *p_n;
 
 	p_n = NULL;
-    if (reminder)
-        if ((p_n = ft_strchr(reminder, '\n')))
-        {
-            *p_n = '\0';
-            *line = ft_strdup(reminder);
+	if (reminder)
+		if ((p_n = ft_strchr(reminder, '\n')))
+		{
+			*p_n = '\0';
+			*line = ft_strdup(reminder);
 			ft_strcpy(reminder, ++p_n);
-        }
+		}
 		else
 		{
 			*line = ft_strdup(reminder);
@@ -47,7 +47,7 @@ char		*check_reminder(char *reminder, char **line)
 	return (p_n);
 }
 
-int		get_next_line(int fd, char **line)
+int				get_next_line(int fd, char **line)
 {
 	static char		*reminder;
 	char			*buffer;
@@ -59,7 +59,6 @@ int		get_next_line(int fd, char **line)
 	p_n = check_reminder(reminder, line);
 	while (!p_n && (br = read(fd, buffer, BUFFER_SIZE)))
 	{
-
 		buffer[br] = '\0';
 		if ((p_n = ft_strchr(buffer, '\n')))
 		{
@@ -70,13 +69,11 @@ int		get_next_line(int fd, char **line)
 		tmp = *line;
 		*line = ft_strjoin(*line, buffer);
 		free(tmp);
-
 	}
 	if (BUFFER_SIZE > br)
 		return (0);
 	return ((br || ft_strlen(reminder) || ft_strlen(*line)) ? 1 : 0);
 }
-
 
 int main(void)
 {
@@ -94,10 +91,9 @@ int main(void)
 	}
 		
 	printf("%d* %s\n", i, line);
-
-		// printf("%d* %s\n", i, line);
-
 	free(line);
+
+	
 	close(fd);
 	return (0);
-}	
+}
