@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 20:26:22 by hboudhir          #+#    #+#             */
-/*   Updated: 2019/11/06 15:05:30 by hboudhir         ###   ########.fr       */
+/*   Updated: 2019/11/06 17:15:54 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int		get_next_line(int fd, char **line)
 	p_n = check_reminder(reminder, line);
 	while (!p_n && (br = read(fd, buffer, BUFFER_SIZE)))
 	{
+
 		buffer[br] = '\0';
 		if ((p_n = ft_strchr(buffer, '\n')))
 		{
@@ -69,8 +70,11 @@ int		get_next_line(int fd, char **line)
 		tmp = *line;
 		*line = ft_strjoin(*line, buffer);
 		free(tmp);
+
 	}
-	return (br || ft_strlen(reminder) || ft_strlen(*line)) ? 1 : 0;
+	if (BUFFER_SIZE > br)
+		return (0);
+	return ((br || ft_strlen(reminder) || ft_strlen(*line)) ? 1 : 0);
 }
 
 
@@ -83,9 +87,17 @@ int main(void)
 	i = 0;
 	fd = open("text.txt", O_RDONLY);
 
-	while(get_next_line(fd, &line))
-		printf("* %s\n", line);
+	while((i = get_next_line(fd, &line)))
+	{
+		printf("%d* %s\n", i, line);
+		free(line);
+	}
+		
+	printf("%d* %s\n", i, line);
 
+		// printf("%d* %s\n", i, line);
+
+	free(line);
 	close(fd);
 	return (0);
 }	
