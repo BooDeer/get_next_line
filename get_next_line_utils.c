@@ -1,26 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*    get_next_line_utils.c                             :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 20:26:40 by hboudhir          #+#    #+#             */
-/*   Updated: 2019/10/31 23:10:25 by hboudhir         ###   ########.fr       */
+/*   Updated: 2019/11/06 14:43:03 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-size_t	ft_strlen(const char *s)
-{
-    size_t     i;
-
-    i = 0;
-    while (s[i] != '\0')
-        i++;
-    return (i);
-}
 
 char	*ft_strdup(const char *s)
 {
@@ -79,4 +69,35 @@ char	*ft_strchr(const char *s, int c)
 		i++;
 	}
 	return (NULL);
+}
+
+char	*ft_strcpy(char *dst, const char *src)
+{
+	int		i;
+
+	i = 0;
+	while (src[i] != '\0')
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (dst);
+}
+
+void	*ft_memset(void *b, int c, size_t len)
+{
+	unsigned char		*s;
+	unsigned char		a;
+	size_t				i;
+
+	s = (unsigned char *)b;
+	a = (unsigned char)c;
+	i = 0;
+	while (i < len)
+	{
+		s[i] = a;
+		i++;
+	}
+	return (b);
 }

@@ -6,38 +6,51 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 20:26:22 by hboudhir          #+#    #+#             */
-/*   Updated: 2019/11/01 18:16:25 by hboudhir         ###   ########.fr       */
+/*   Updated: 2019/11/06 15:05:30 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "get_next_line.h"
 
-char *check_reminder(char *reminder, char **line)
+size_t		ft_strlen(const char *s)
+{
+    size_t     i;
+	
+    i = 0;
+	if (!s)
+		return (0);
+    while (s[i] != '\0')
+        i++;
+    return (i);
+}
+
+char		*check_reminder(char *reminder, char **line)
 {
     char *p_n;
 
+	p_n = NULL;
     if (reminder)
         if ((p_n = ft_strchr(reminder, '\n')))
         {
-            *p_n = '\n';
+            *p_n = '\0';
             *line = ft_strdup(reminder);
 			ft_strcpy(reminder, ++p_n);
         }
 		else
 		{
 			*line = ft_strdup(reminder);
-			ft_strclr(reminder); // check what function is this = to-check
+			ft_memset(reminder, 0, ft_strlen(reminder));
 		}
 	else
-		*line = ft_strnew(); // to-check
+		*line = ft_strdup("\0");
 	return (p_n);
 }
 
 int		get_next_line(int fd, char **line)
 {
 	static char		*reminder;
-	char			buffer;
+	char			*buffer;
 	int				br;
 	char			*p_n;
 	char			*tmp;
@@ -57,7 +70,7 @@ int		get_next_line(int fd, char **line)
 		*line = ft_strjoin(*line, buffer);
 		free(tmp);
 	}
-	return (br || ft_strlen(reminder)) ? 1 : 0;
+	return (br || ft_strlen(reminder) || ft_strlen(*line)) ? 1 : 0;
 }
 
 
