@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 20:26:40 by hboudhir          #+#    #+#             */
-/*   Updated: 2019/11/06 21:31:38 by hboudhir         ###   ########.fr       */
+/*   Updated: 2019/11/08 14:45:41 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,23 @@ char			*ft_strchr(const char *s, int c)
 		i++;
 	}
 	return (NULL);
+}
+
+char *ft_strchr_o(char *str, char d)
+{
+	char *ptr;
+	char *to_free;
+
+	to_free = str;
+	while (*str)
+	{
+		if (*str == d)
+			break;
+		str++;
+	}
+	ptr = ft_strdup(str);
+	free(to_free);
+	return ptr;
 }
 
 char			*ft_strcpy(char *dst, const char *src)

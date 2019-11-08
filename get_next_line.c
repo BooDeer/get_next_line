@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 20:26:22 by hboudhir          #+#    #+#             */
-/*   Updated: 2019/11/08 15:04:47 by hboudhir         ###   ########.fr       */
+/*   Updated: 2019/11/08 18:00:39 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char			*check_reminder(char *reminder, char **line)
 	return (p_n);
 }
 
-int		check_return(int br, char *reminder, char **line, char *buffer)
+int				check_return(int br, char *reminder, char **line, char *buffer)
 {
 	if (!br && ft_strlen(reminder) == 0)
 		return (0);
@@ -55,53 +55,31 @@ int		check_return(int br, char *reminder, char **line, char *buffer)
 		return (1);
 	return (br);
 }
+
 int				get_next_line(int fd, char **line)
 {
-	static char		*reminder;
-	char			*buffer;
+	static char		*bf;
+	char			*rd;
 	int				br;
-	char			*p_n;
+	char			*ptr;
 	char			*tmp;
 
-	if (!fd || !(buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1))))
+	if (!fd || !(rd = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 		return (-1);
-	p_n = check_reminder(reminder, line);
-	while (!p_n && (br = read(fd, buffer, BUFFER_SIZE)))	
-	{	buffer[br] = '\0';
-		if ((p_n = ft_strchr(buffer, '\n')))
+	ptr = check_reminder(bf, line);
+	while (!ptr && (br = read(fd, rd, BUFFER_SIZE)))
+	{
+		rd[br] = '\0';
+		if ((ptr = ft_strchr(rd, '\n')))
 		{
-			*p_n = '\0';
-			p_n++;
-			reminder = ft_strdup(p_n);
+			*ptr = '\0';
+			ptr++;
+			bf = ft_strdup(ptr);
 		}
 		tmp = *line;
-		*line = ft_strjoin(*line, buffer);
+		*line = ft_strjoin(*line, rd);
 		free(tmp);
-		
 	}
-	free(buffer);
-	return (check_return(br, reminder, line, buffer));
-}
-
-int main(void)
-{
-	char	*line;
-	int		fd;
-	int		i;
-
-	i = 0;
-	fd = open("text.txt", O_RDONLY);
-
-	while((i = get_next_line(fd, &line)))
-	{
-		printf("%d* %s\n", i, line);
-		free(line);
-	}
-		
-	printf("%d* %s\n", i, line);
-	free(line);
-
-	
-	close(fd);
-	return (0);
+	free(rd);
+	return (check_return(br, bf, line, rd));
 }
