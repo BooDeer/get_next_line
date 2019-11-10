@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 20:26:22 by hboudhir          #+#    #+#             */
-/*   Updated: 2019/11/09 23:02:01 by hboudhir         ###   ########.fr       */
+/*   Updated: 2019/11/10 18:42:53 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ int			check_reminder(char *reminder, char **line)
 			ft_memset(reminder, 0, ft_strlen(reminder));
 		}
 	}
-	//else
-		//*line = ft_strdup("");
 	return (0);
 }
 
@@ -64,22 +62,26 @@ int				get_next_line(int fd, char **line)
 {
 	static char		*bf;
 	char			*rd;
-	int				br;
+	int				br = 1;
 	char			*ptr;
 	char			*tmp;
 
-	if (BUFFER_SIZE < 0 || fd < 0 || read(fd, NULL, 0) < 0 || !(rd = malloc((BUFFER_SIZE + 1))))
+	if (BUFFER_SIZE < 0 || fd < 0 || read(fd, NULL, 0) < 0)
 		return (-1);
 	if (check_reminder(bf, line))
 		return (1);
-	while ((br = read(fd, rd, BUFFER_SIZE)))
-	{
+	while (br)
+	{	if(!(rd = malloc((BUFFER_SIZE + 1))))
+			return (-1);
+		br = read(fd, rd, BUFFER_SIZE);
 		rd[br] = '\0';
 		if ((ptr = ft_strchr(rd, '\n')))
 		{
 			*ptr++ = '\0';
 			bf = ft_strdup(ptr);
+			tmp = rd;
 			*line = ft_strjoin(*line, rd);
+			free(tmp);
 			return (1);
 		}
 		tmp = *line;
@@ -97,14 +99,12 @@ int				get_next_line(int fd, char **line)
 // 	fd = open("normal.txt", O_RDONLY);
 
 // 	while ((
-// 		rd = get_next_line(42, &line)
+// 		rd = get_next_line(fd, &line)
 // 	))
 // 	{
 // 		printf("%d-%d* %s\n", i++,rd , line);
-// 		//free(line);
+// 		free(line);
 // 	}
-// 	/*get_next_line(fd, &line);
 // 	printf("%d-%d* %s\n", i++, rd, line);
-// 	free(line);*/
-
+// 	free(line);
 // }
