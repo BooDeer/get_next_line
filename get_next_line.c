@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 20:26:22 by hboudhir          #+#    #+#             */
-/*   Updated: 2019/11/10 18:42:53 by hboudhir         ###   ########.fr       */
+/*   Updated: 2019/11/10 20:29:59 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ size_t			ft_strlen(const char *s)
 int			check_reminder(char *reminder, char **line)
 {
 	char *p_n;
-
+	char *tmp;
+	
 	p_n = NULL;
 	*line = ft_strdup("");
 	if (reminder)
@@ -36,8 +37,12 @@ int			check_reminder(char *reminder, char **line)
 		if ((p_n = ft_strchr(reminder, '\n')))
 		{
 			*p_n = '\0';
+			tmp = *line;
+
 			*line = ft_strdup(reminder);
 			ft_strcpy(reminder, ++p_n);
+			free(tmp);
+			
 			return (1);
 		}
 		else
@@ -46,6 +51,7 @@ int			check_reminder(char *reminder, char **line)
 			ft_memset(reminder, 0, ft_strlen(reminder));
 		}
 	}
+
 	return (0);
 }
 
