@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 20:26:22 by hboudhir          #+#    #+#             */
-/*   Updated: 2019/11/10 20:29:59 by hboudhir         ###   ########.fr       */
+/*   Updated: 2019/11/12 17:39:33 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ size_t			ft_strlen(const char *s)
 	return (i);
 }
 
-int			check_reminder(char *reminder, char **line)
+int			check_reminder(char *reminder, char **line, char **buff)
 {
 	char *p_n;
 	char *tmp;
@@ -38,20 +38,21 @@ int			check_reminder(char *reminder, char **line)
 		{
 			*p_n = '\0';
 			tmp = *line;
-
 			*line = ft_strdup(reminder);
 			ft_strcpy(reminder, ++p_n);
 			free(tmp);
-			
+			free(*buff);
 			return (1);
 		}
 		else
 		{
+			tmp = *line;
 			*line = ft_strdup(reminder);
 			ft_memset(reminder, 0, ft_strlen(reminder));
+			free(tmp);
+			//free(reminder);
 		}
 	}
-
 	return (0);
 }
 
@@ -72,22 +73,25 @@ int				get_next_line(int fd, char **line)
 	char			*ptr;
 	char			*tmp;
 
-	if (BUFFER_SIZE < 0 || fd < 0 || read(fd, NULL, 0) < 0)
+	if (BUFFER_SIZE < 0 || fd < 0 || read(fd, NULL, 0) < 0
+	|| !(rd = malloc((BUFFER_SIZE + 1))))
 		return (-1);
-	if (check_reminder(bf, line))
+	if (check_reminder(bf, line, &rd))
 		return (1);
 	while (br)
-	{	if(!(rd = malloc((BUFFER_SIZE + 1))))
-			return (-1);
+	{
 		br = read(fd, rd, BUFFER_SIZE);
 		rd[br] = '\0';
 		if ((ptr = ft_strchr(rd, '\n')))
 		{
 			*ptr++ = '\0';
+			tmp = bf;
 			bf = ft_strdup(ptr);
-			tmp = rd;
+			free(tmp);
+			tmp = *line;
 			*line = ft_strjoin(*line, rd);
 			free(tmp);
+			free(rd);
 			return (1);
 		}
 		tmp = *line;
